@@ -1,0 +1,12 @@
+set GOBIN=D:\environtment\go.1.22.6\go\bin
+//set gobin into go installation folder
+
+//install swagger command
+go install github.com/swaggo/swag/cmd/swag@latest
+
+//add dependencies
+go get -u github.com/swaggo/gin-swagger
+go get -u github.com/swaggo/files
+
+//docker
+docker run -d --name my_postgres_2 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=123123 -e POSTGRES_DB=postgres -p 5433:5432 postgres

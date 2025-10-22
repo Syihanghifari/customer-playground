@@ -1,0 +1,328 @@
+definitions:
+  domain.Customer:
+    properties:
+      birth_date:
+        example: "1995-06-12T00:00:00Z"
+        type: string
+      created_at:
+        $ref: '#/definitions/types.NullTime'
+      customer_number:
+        type: integer
+      email:
+        type: string
+      name:
+        type: string
+      phone:
+        type: string
+      updated_at:
+        $ref: '#/definitions/types.NullTime'
+    type: object
+  domain.CustomerNote:
+    properties:
+      created_at:
+        $ref: '#/definitions/types.NullTime'
+      customer_number:
+        type: integer
+      id:
+        type: integer
+      note:
+        type: string
+    type: object
+  domain.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  domain.Response:
+    properties:
+      message:
+        type: string
+      statuscode:
+        type: integer
+    type: object
+  types.NullTime:
+    properties:
+      time:
+        type: string
+      valid:
+        type: boolean
+    type: object
+info:
+  contact: {}
+paths:
+  /customer:
+    get:
+      description: Retrieves all customers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Customer'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get all customers
+      tags:
+      - customers
+    post:
+      consumes:
+      - application/json
+      description: Adds a new customer to the database
+      parameters:
+      - description: Customer payload
+        in: body
+        name: customer
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Customer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Insert new customer
+      tags:
+      - customers
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing customer by customer number or ID
+      parameters:
+      - description: Customer payload
+        in: body
+        name: customer
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Customer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Update customer
+      tags:
+      - customers
+  /customer-note:
+    post:
+      consumes:
+      - application/json
+      description: Inserts a new customer note into the system
+      parameters:
+      - description: Customer Note Payload
+        in: body
+        name: customerNote
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CustomerNote'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Insert result
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Create a new customer note
+      tags:
+      - customer-note
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing customer note
+      parameters:
+      - description: Customer Note Payload
+        in: body
+        name: customerNote
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CustomerNote'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Update result
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Update a customer note
+      tags:
+      - customer-note
+  /customer-note/{id}:
+    delete:
+      description: Deletes a customer note by its ID
+      parameters:
+      - description: Customer Note ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Delete result
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Delete a customer note by ID
+      tags:
+      - customer-note
+  /customer-note/get-all:
+    get:
+      description: Retrieves all customer notes from the system
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of customer notes
+          schema:
+            items:
+              $ref: '#/definitions/domain.CustomerNote'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get all customer notes
+      tags:
+      - customer-note
+  /customer-note/get-by-customer-number/{customer_number}:
+    get:
+      description: Retrieves all notes associated with a given customer number
+      parameters:
+      - description: Customer Number
+        in: path
+        name: customer_number
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Customer notes for the customer number
+          schema:
+            items:
+              $ref: '#/definitions/domain.CustomerNote'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get customer notes by customer number
+      tags:
+      - customer-note
+  /customer-note/get-by-id/{id}:
+    get:
+      description: Retrieves a customer note by its unique ID
+      parameters:
+      - description: Customer Note ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Customer note
+          schema:
+            $ref: '#/definitions/domain.CustomerNote'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get a customer note by ID
+      tags:
+      - customer-note
+  /customer/{customer_number}:
+    delete:
+      description: Deletes a customer based on customer number
+      parameters:
+      - description: Customer Number
+        in: path
+        name: customer_number
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Delete customer by number
+      tags:
+      - customers
+    get:
+      description: Retrieves a customer by their customer number
+      parameters:
+      - description: Customer Number
+        in: path
+        name: customer_number
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Customer'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get customer by number
+      tags:
+      - customers
+swagger: "2.0"

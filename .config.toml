@@ -1,0 +1,12 @@
+[app]
+    name        = "customer-playground"
+    environment = "development"
+    port        = 8080
+
+[database]
+    host        = "postgres_db"
+    port        = 5432
+    name        = "postgres"
+    username    = "postgres"
+    password    = "123123"
+    sslmode     = "disable"
